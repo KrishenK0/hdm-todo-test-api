@@ -1,73 +1,33 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Introduction
+This repository contains the backend code for the **HDM Todo List** project. The goal of this project is to implement a todo list using React for the backend and NestJS for the backend. Tasks are stored in an external MySQL database, which communicates with the backend through the **Prisma ORM**.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Backend Implementation
+Each controller for the backend is implemented within `TaskController`, which handles multiple actions such as GET, POST, PATCH, and DELETE. Each controller corresponds to a specific **CRUD** action on the database.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Select
+To retrieve the list of tasks, perform a **GET** request to the API. The request is intercepted by the `getAll()` method and handled by the `GetAllTasksUseCase` class. It performs a SELECT query on the database using the `TaskRepository` class, specifically with the method `this.prisma.task.findMany()`.
 
-## Description
+## Delete
+To delete a task, perform a **DELETE** request to the API endpoint. The request is handled by the `DeleteTask` class, which was already implemented. This class performs a delete operation on the table using Prisma and the ID provided in the request body.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Create
+To create a task, send a **POST** request with the task parameters (name, progress, etc.) in the request body. The `SaveTaskUseCase` class will handle this request. `SaveTaskUseCase` has two roles: creating new tasks and updating existing ones. First, it validates the values (e.g., name must not be null or too long). Then, it saves the data using `TaskRepository`. If the provided **ID** is null, it creates a new task, if an ID is present, it updates the existing task with that ID.
 
-## Installation
+## Update
+To update a task, send a **PATCH** request with the task parameters in the request body (make sure to include the ID, or it will create a new task). `SaveTaskUseCase` handles this request. Through the save method in `TaskRepository` using **Prisma**, it updates the specified row in the database based on the provided ID.
 
-```bash
-$ yarn install
-```
+# Choices and Decisions
+## Git
+To provide a clearer view of each implementation step, I structured commits such that each commit represents one specific implementation. This approach allows for easier comprehension of the work done and provides context for each change. Additionally, this approach simplifies code review and debugging for external reviewers.
 
-## Running the app
+## Bonus
+I decided to add a "progress" attribute for tasks, which required adding a new field in the database. I modified the schema and then executed the command `npx prisma migrate dev` to apply the updated schema to the database.
 
-```bash
-# development
-$ yarn run start
+## Dependencies
+For simplicity, I chose not to add new dependencies to the project, as the required implementations were straightforward. Fewer dependencies reduce the amount of code to debug, improve security, and typically increase performance.
 
-# watch mode
-$ yarn run start:dev
+# Challenges and Solutions
+## Database
+Since the database was external, I used **Docker** to deploy a **MySQL** instance. However, the provided Dockerfile was configured for a Linux environment. I modified the line `RUN cp /usr/share/zoneinfo/Europe/Brussels /etc/localtime` to `ENV TZ=Europe/Brussels` to make it compatible with Windows, which was the environment I used for development.
 
-# production mode
-$ yarn run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Author: Antoine
