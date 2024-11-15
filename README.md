@@ -18,7 +18,7 @@ To update a task, send a **PATCH** request with the task parameters in the reque
 
 # Choices and Decisions
 ## Git
-To provide a clearer view of each implementation step, I structured commits such that each commit represents one specific implementation. This approach allows for easier comprehension of the work done and provides context for each change. Additionally, this approach simplifies code review and debugging for external reviewers.
+To provide a clearer view of each implementation step, I structured commits such that each commit represents one specific implementation. This approach allows for easier comprehension of the work done and provides context for each change. Additionally, this approach simplifies code review and debugging for external reviewers. I understand that a feature branch structure is generally preferred, but since I am working alone on this project, I decided not to implement it.
 
 ## Bonus
 I decided to add a "progress" attribute for tasks, which required adding a new field in the database. I modified the schema and then executed the command `npx prisma migrate dev` to apply the updated schema to the database.
