@@ -27,6 +27,7 @@ export default class TaskRepository {
       return this.prisma.task.create({
         data : {
           name: data.name as string,
+          progress: data.progress as number,
         }
       });
     }

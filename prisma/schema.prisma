@@ -10,6 +10,7 @@ datasource db {
 model Task {
   id        Int      @id @default(autoincrement())
   name      String
+  progress  Int @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
