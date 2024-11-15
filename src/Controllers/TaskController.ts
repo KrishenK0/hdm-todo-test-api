@@ -29,7 +29,7 @@ export default class TaskController {
 
   @Patch('/tasks/:id')
   async update(@Body() dto: SaveTaskDto) {
-    // @todo YOU MUST FOLLOW THE SAME IMPLEMENTATION AS OTHER ENDPOINTS
+    return (await this.useCaseFactory.create(SaveTaskUseCase)).handle(dto);
   }
 
   @Delete('/tasks/:id')
